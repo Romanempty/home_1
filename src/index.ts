@@ -146,7 +146,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             res.status(HTTP_STATUSES.BAD_REQUEST_400).send(eList) 
             } else {
                 videos[index] = newVideo
-                res.status(HTTP_STATUSES.NO_CONTENT_204)
+                res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
             }
         } else {
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
