@@ -138,6 +138,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             if (!r.test(newVideo.publicationDate)) {
                 errorsArray.push({message: 'error', field: 'publicationDate'})
             }
+        } else {
+            errorsArray.push({message: 'error', field: 'publicationDate'})
         }
         if (errorsArray.length > 0) {
             let eList = {errorsMessages: errorsArray}
