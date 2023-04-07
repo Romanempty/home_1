@@ -58,9 +58,9 @@ app.post('/videos', (req: Request, res: Response) => {
         if (typeof newVideo.author !== 'string' || newVideo.author.length > 20) {
             errorsArray.push({message:'error', field: 'author'})     
         }
-        if (Array.isArray(newVideo?.availableResolutions)){
-            const length = newVideo?.availableResolutions.length
-            let check = newVideo?.availableResolutions.filter(value => {
+        if (Array.isArray(newVideo.availableResolutions)){
+            const length = newVideo.availableResolutions.length
+            let check = newVideo.availableResolutions.filter(value => {
                 return availableResolutions.includes(value)
             })    
             if (check.length < length) {
@@ -69,21 +69,21 @@ app.post('/videos', (req: Request, res: Response) => {
         } else {
             errorsArray.push({message:'error', field: 'availableResolutions'}) 
         }
-        if (typeof newVideo?.canBeDownloaded !== 'boolean') {
-            if (newVideo?.canBeDownloaded === undefined) {
+        if (typeof newVideo.canBeDownloaded !== 'boolean') {
+            if (newVideo.canBeDownloaded === undefined) {
                 newVideo.canBeDownloaded = false
             } else {
                 errorsArray.push({message:'error', field: 'canBeDownloaded'})
             }
         }
-        if (newVideo?.minAgeRestriction !== null && typeof newVideo?.minAgeRestriction  !== 'number') {
+        if (newVideo?.minAgeRestriction !== null && typeof newVideo.minAgeRestriction  !== 'number') {
             if (newVideo?.minAgeRestriction === undefined) {
                 newVideo.minAgeRestriction = null
             } else {
                 errorsArray.push({message:'error', field: 'minAgeRestriction'})
                 }
             } else if (typeof newVideo?.minAgeRestriction !== 'number') {
-                if (+newVideo?.minAgeRestriction < 1 || +newVideo?.minAgeRestriction >18) {
+                if (+newVideo.minAgeRestriction < 1 || +newVideo.minAgeRestriction >18) {
                     errorsArray.push({message:'error', field: 'minAgeRestriction'})
                 }
         }
@@ -108,9 +108,9 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         if (typeof newVideo.author !== 'string' || newVideo.author.length > 20) {
             errorsArray.push({message:'error', field: 'author'})     
         }
-        if (Array.isArray(newVideo?.availableResolutions)){
-            const length = newVideo?.availableResolutions.length
-            let check = newVideo?.availableResolutions.filter((value: string) => {
+        if (Array.isArray(newVideo.availableResolutions)){
+            const length = newVideo.availableResolutions.length
+            let check = newVideo.availableResolutions.filter((value: string) => {
                 return availableResolutions.includes(value)
             })    
             if (check.length < length) {
@@ -119,16 +119,16 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         } else {
             errorsArray.push({message:'error', field: 'availableResolutions'}) 
         }
-        if (typeof newVideo?.canBeDownloaded !== 'boolean') {
+        if (typeof newVideo.canBeDownloaded !== 'boolean') {
             if (newVideo?.canBeDownloaded === undefined) {
                 newVideo.canBeDownloaded = false
             } else {
                 errorsArray.push({message:'error', field: 'canBeDownloaded'})
             }
         }
-        if (newVideo?.minAgeRestriction !== null && typeof newVideo?.minAgeRestriction  !== 'number') {
+        if (newVideo.minAgeRestriction !== null && typeof newVideo.minAgeRestriction  !== 'number') {
                 errorsArray.push({message:'error', field: 'minAgeRestriction'})
-            } else if (typeof newVideo?.minAgeRestriction !== 'number') {
+            } else if (typeof newVideo.minAgeRestriction !== 'number') {
                 if ( +newVideo?.minAgeRestriction < 1 || +newVideo?.minAgeRestriction >18) {
                     errorsArray.push({message:'error', field: 'minAgeRestriction'})
                 }
