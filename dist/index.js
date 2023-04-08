@@ -127,7 +127,7 @@ app.put('/videos/:id', (req, res) => {
         if ((newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== null && typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== 'number') {
             errorsArray.push({ message: 'error', field: 'minAgeRestriction' });
         }
-        else if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== 'number') {
+        else if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) === 'number') {
             if (+(newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) < 1 || +(newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) > 18) {
                 errorsArray.push({ message: 'error', field: 'minAgeRestriction' });
             }

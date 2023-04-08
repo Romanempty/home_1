@@ -123,7 +123,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         }
         if (newVideo?.minAgeRestriction !== null && typeof newVideo?.minAgeRestriction  !== 'number') {
                 errorsArray.push({message:'error', field: 'minAgeRestriction'})
-            } else if (typeof newVideo?.minAgeRestriction !== 'number') {
+            } else if (typeof newVideo?.minAgeRestriction === 'number') {
                 if ( +newVideo?.minAgeRestriction < 1 || +newVideo?.minAgeRestriction >18) {
                     errorsArray.push({message:'error', field: 'minAgeRestriction'})
                 }
