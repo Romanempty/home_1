@@ -100,15 +100,15 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     let errorsArray = []
     if (newVideo1) {
     const newVideo = {...newVideo1, ...req.body}
-        if (typeof newVideo.title !== 'string' || newVideo.title.length > 40) {
+        if (typeof newVideo?.title !== 'string' || newVideo.title.length > 40) {
            errorsArray.push({message:'error', field: 'title'})     
         }
-        if (typeof newVideo.author !== 'string' || newVideo.author.length > 20) {
+        if (typeof newVideo?.author !== 'string' || newVideo.author.length > 20) {
             errorsArray.push({message:'error', field: 'author'})     
         }
-        if (Array.isArray(newVideo.availableResolutions)){
-            const length = newVideo.availableResolutions.length
-            let check = newVideo.availableResolutions.filter((value: string) => {
+        if (Array.isArray(newVideo?.availableResolutions)){
+            const length = newVideo?.availableResolutions.length
+            let check = newVideo?.availableResolutions.filter((value: string) => {
                 return availableResolutions.includes(value)
             })    
             if (check.length < length) {
@@ -117,21 +117,23 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         } else {
             errorsArray.push({message:'error', field: 'availableResolutions'}) 
         }
-        if (typeof newVideo.canBeDownloaded !== 'boolean') {
-            if (newVideo?.canBeDownloaded === undefined) {
-                newVideo.canBeDownloaded = false
-            } else {
+        if (typeof newVideo?.canBeDownloaded !== 'boolean') {
                 errorsArray.push({message:'error', field: 'canBeDownloaded'})
-            }
+              
         }
-        if (newVideo.minAgeRestriction !== null && typeof newVideo.minAgeRestriction  !== 'number') {
+        if (newVideo?.minAgeRestriction !== null && typeof newVideo?.minAgeRestriction  !== 'number') {
                 errorsArray.push({message:'error', field: 'minAgeRestriction'})
-            } else if (typeof newVideo.minAgeRestriction !== 'number') {
+            } else if (typeof newVideo?.minAgeRestriction !== 'number') {
                 if ( +newVideo?.minAgeRestriction < 1 || +newVideo?.minAgeRestriction >18) {
                     errorsArray.push({message:'error', field: 'minAgeRestriction'})
                 }
         }
         if (typeof newVideo.publicationDate === 'string') {
+            let r = /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|w([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/
+            if (!r.test(newVideo.publicationDate)) {
+                errorsArray.push({message: 'error', field: 'publicationDate'})
+            }
+        } else {
             errorsArray.push({message: 'error', field: 'publicationDate'})
         }
         if (errorsArray.length > 0) {
