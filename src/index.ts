@@ -143,7 +143,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             let eList = {errorsMessages: errorsArray}
             res.status(HTTP_STATUSES.BAD_REQUEST_400).send(eList) 
             } else {
-                videos[index] = newVideo
+                videos[index] = newVideo1
                 res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
             }
         } else {
