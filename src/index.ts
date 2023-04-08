@@ -96,7 +96,7 @@ app.post('/videos', (req: Request, res: Response) => {
 
 app.put('/videos/:id', (req: Request, res: Response) => {
     let newVideo1 = videos.find(p => p.id === +req.params.id)
-    let index = videos.findIndex(v => v.id === +req.params.id)
+    let index = videos.findIndex(p => p.id === +req.params.id)
     let errorsArray = []
     if (newVideo1) {
     const newVideo = {...newVideo1, ...req.body}
@@ -143,7 +143,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             let eList = {errorsMessages: errorsArray}
             res.status(HTTP_STATUSES.BAD_REQUEST_400).send(eList) 
             } else {
-                videos[index] = newVideo1
+                videos[index] = newVideo
                 res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
             }
         } else {
