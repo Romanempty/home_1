@@ -43,8 +43,8 @@ app.post('/videos', (req: Request, res: Response) => {
         id : +(new Date()),	
         title : req.body.title,
         author : req.body.author,
-        canBeDownloaded : req.body.canBeDownloaded,
-        minAgeRestriction : req.body.minAgeRestriction,
+        canBeDownloaded : false,
+        minAgeRestriction : null,
         createdAt :	(new Date().toISOString()),
         publicationDate	: (new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
         availableResolutions : req.body.availableResolutions
@@ -74,16 +74,12 @@ app.post('/videos', (req: Request, res: Response) => {
                 errorsArray.push({message:'error', field: 'canBeDownloaded'})
             }
         }
-        if (newVideo?.minAgeRestriction !== null && typeof newVideo.minAgeRestriction  !== 'number') {
-            if (newVideo?.minAgeRestriction === undefined) {
-                newVideo.minAgeRestriction = null
-            } else {
+        if (newVideo?.minAgeRestriction !== null && typeof newVideo?.minAgeRestriction  !== 'number') {
+            errorsArray.push({message:'error', field: 'minAgeRestriction'})
+        } else if (typeof newVideo?.minAgeRestriction === 'number') {
+            if ( +newVideo?.minAgeRestriction < 1 || +newVideo?.minAgeRestriction >18) {
                 errorsArray.push({message:'error', field: 'minAgeRestriction'})
-                }
-            } else if (typeof newVideo?.minAgeRestriction !== 'number') {
-                if (+newVideo.minAgeRestriction < 1 || +newVideo.minAgeRestriction >18) {
-                    errorsArray.push({message:'error', field: 'minAgeRestriction'})
-                }
+            }
         }
         if (errorsArray.length > 0) {
             let eList = {errorsMessages: errorsArray}
