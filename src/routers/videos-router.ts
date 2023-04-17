@@ -1,16 +1,16 @@
 import {Request, Response, Router} from 'express'
+import { videos } from '../constants/constVideos'
+import { availableResolutions } from '../constants/constVideos'
+import HTTP_STATUSES from '../views/statusViews'
+import { videoRepository } from '../repositories/videos-repositories'
 export const videoRouter = Router ({})
-import { videos } from '../constVideos'
-import { availableResolutions } from '../constVideos'
-import HTTP_STATUSES from '../types/requestTypes'
-
 
 videoRouter.get('/', (req: Request, res: Response) => {
     res.send(videos)
 })
 
 videoRouter.get('/:id', (req: Request, res: Response) => {
-    let video = videos.find(p => p.id === +req.params.id)
+    let video = videoRepository.findVideo(+req.params.id)
     if (video) {
         res.send(video)
     } else {
@@ -41,7 +41,7 @@ videoRouter.post('/', (req: Request, res: Response) => {
     }
     let errorsArray = []
         if (typeof newVideo.title !== 'string' || newVideo.title.length > 40) {
-           errorsArray.push({message:'error', field: 'title'})     
+            errorsArray.push({message:'error', field: 'title'})     
         }
         if (typeof newVideo.author !== 'string' || newVideo.author.length > 20) {
             errorsArray.push({message:'error', field: 'author'})     
