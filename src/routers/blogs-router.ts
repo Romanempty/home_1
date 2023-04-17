@@ -7,6 +7,7 @@ import { inputValidationMidldewareErrors } from "../midlewaress/valMiddlewire";
 import { blogNameVal } from "../midlewaress/valBlog";
 import { blogDescriptionVal } from "../midlewaress/valBlog";
 import { blogWebsiteUrlVal } from "../midlewaress/valBlog";
+
 export const blogRouter = Router({})
 
 blogRouter.get('/', (req: Request, res: Response) => {
@@ -32,7 +33,7 @@ inputValidationMidldewareErrors,
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return
     } 
-    res.status(HTTP_STATUSES.OK_200).send(foundBlog)
+    res.status(HTTP_STATUSES.NO_CONTENT_204).send(foundBlog)
 })  
 
 blogRouter.post('/', 

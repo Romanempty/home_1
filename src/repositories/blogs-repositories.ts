@@ -25,12 +25,12 @@ export const blogRepository = {
         return newBlog
     },
 
-    updateBlog(id:string, name: string, description: string, websiteUrl: string) {
+    updateBlog(id:string, name: string, description: string, website: string) {
         let foundBlogById = blogs.find(p => p.id === id)
         if(foundBlogById) {
             foundBlogById.name = name
             foundBlogById.description = description
-            foundBlogById.websiteUrl = websiteUrl
+            foundBlogById.websiteUrl = website
             return true
         }
         return false
