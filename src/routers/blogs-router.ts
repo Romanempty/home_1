@@ -62,8 +62,9 @@ inputValidationMidldewareErrors,
     const description = req.body.description
     const website = req.body.websiteUrl
     const blogUpdate = blogRepository.updateBlog(id, name, description, website)
-        if(!blogUpdate) {
+        if(blogUpdate) {
+            return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)            
+        } else {
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-        }
-    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+        }    
 }) 
