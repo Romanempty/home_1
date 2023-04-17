@@ -4,155 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const requestTypes_1 = __importDefault(require("./types/requestTypes"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const constVideos_1 = require("./constVideos");
-const constVideos_2 = require("./constVideos");
+const testing_router_1 = require("./routers/testing-router");
+const blogs_router_1 = require("./routers/blogs-router");
+const posts_router_1 = require("./routers/posts-router");
 const app = (0, express_1.default)();
+app.use((0, body_parser_1.default)());
 const port = process.env.PORT || 3000;
-const parserMiddleware = (0, body_parser_1.default)();
-app.use(parserMiddleware);
-app.delete('/testing/all-data', (req, res) => {
-    constVideos_1.videos.splice(0, constVideos_1.videos.length);
-    res.sendStatus(requestTypes_1.default.NO_CONTENT_204);
-});
-app.get('/videos', (req, res) => {
-    res.send(constVideos_1.videos);
-});
-app.get('/videos/:id', (req, res) => {
-    let video = constVideos_1.videos.find(p => p.id === +req.params.id);
-    if (video) {
-        res.send(video);
-    }
-    else {
-        res.sendStatus(requestTypes_1.default.NOT_FOUND_404);
-    }
-});
-app.delete('/videos/:id', (req, res) => {
-    for (let i = 0; i < constVideos_1.videos.length; i++) {
-        if (constVideos_1.videos[i].id === +req.params.id) {
-            constVideos_1.videos.splice(i, 1);
-            res.sendStatus(requestTypes_1.default.NO_CONTENT_204);
-        }
-    }
-    res.sendStatus(requestTypes_1.default.NOT_FOUND_404);
-});
-app.post('/videos', (req, res) => {
-    let newVideo = {
-        id: +(new Date()),
-        title: req.body.title,
-        author: req.body.author,
-        canBeDownloaded: req.body.canBeDownloaded,
-        minAgeRestriction: req.body.minAgeRestriction,
-        createdAt: (new Date().toISOString()),
-        publicationDate: (new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
-        availableResolutions: req.body.availableResolutions
-    };
-    let errorsArray = [];
-    if (typeof newVideo.title !== 'string' || newVideo.title.length > 40) {
-        errorsArray.push({ message: 'error', field: 'title' });
-    }
-    if (typeof newVideo.author !== 'string' || newVideo.author.length > 20) {
-        errorsArray.push({ message: 'error', field: 'author' });
-    }
-    if (Array.isArray(newVideo.availableResolutions)) {
-        const length = newVideo.availableResolutions.length;
-        let check = newVideo.availableResolutions.filter(value => {
-            return constVideos_2.availableResolutions.includes(value);
-        });
-        if (check.length < length) {
-            errorsArray.push({ message: 'error', field: 'availableResolutions' });
-        }
-    }
-    else {
-        errorsArray.push({ message: 'error', field: 'availableResolutions' });
-    }
-    if (typeof newVideo.canBeDownloaded !== 'boolean') {
-        if (newVideo.canBeDownloaded === undefined) {
-            newVideo.canBeDownloaded = false;
-        }
-        else {
-            errorsArray.push({ message: 'error', field: 'canBeDownloaded' });
-        }
-    }
-    if ((newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== null && typeof newVideo.minAgeRestriction !== 'number') {
-        if ((newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) === undefined) {
-            newVideo.minAgeRestriction = null;
-        }
-        else {
-            errorsArray.push({ message: 'error', field: 'minAgeRestriction' });
-        }
-    }
-    else if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== 'number') {
-        if (+newVideo.minAgeRestriction < 1 || +newVideo.minAgeRestriction > 18) {
-            errorsArray.push({ message: 'error', field: 'minAgeRestriction' });
-        }
-    }
-    if (errorsArray.length > 0) {
-        let eList = { errorsMessages: errorsArray };
-        res.status(requestTypes_1.default.BAD_REQUEST_400).send(eList);
-    }
-    else {
-        constVideos_1.videos.push(newVideo);
-        res.status(requestTypes_1.default.CREATED_201).send(newVideo);
-    }
-});
-app.put('/videos/:id', (req, res) => {
-    let newVideo1 = constVideos_1.videos.find(p => p.id === +req.params.id);
-    let index = constVideos_1.videos.findIndex(p => p.id === +req.params.id);
-    let errorsArray = [];
-    if (newVideo1) {
-        const newVideo = Object.assign(Object.assign({}, newVideo1), req.body);
-        if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.title) !== 'string' || newVideo.title.length > 40) {
-            errorsArray.push({ message: 'error', field: 'title' });
-        }
-        if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.author) !== 'string' || newVideo.author.length > 20) {
-            errorsArray.push({ message: 'error', field: 'author' });
-        }
-        if (Array.isArray(newVideo === null || newVideo === void 0 ? void 0 : newVideo.availableResolutions)) {
-            const length = newVideo === null || newVideo === void 0 ? void 0 : newVideo.availableResolutions.length;
-            let check = newVideo === null || newVideo === void 0 ? void 0 : newVideo.availableResolutions.filter((value) => {
-                return constVideos_2.availableResolutions.includes(value);
-            });
-            if (check.length < length) {
-                errorsArray.push({ message: 'error', field: 'availableResolutions' });
-            }
-        }
-        else {
-            errorsArray.push({ message: 'error', field: 'availableResolutions' });
-        }
-        if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.canBeDownloaded) !== 'boolean') {
-            errorsArray.push({ message: 'error', field: 'canBeDownloaded' });
-        }
-        if ((newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== null && typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) !== 'number') {
-            errorsArray.push({ message: 'error', field: 'minAgeRestriction' });
-        }
-        else if (typeof (newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) === 'number') {
-            if (+(newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) < 1 || +(newVideo === null || newVideo === void 0 ? void 0 : newVideo.minAgeRestriction) > 18) {
-                errorsArray.push({ message: 'error', field: 'minAgeRestriction' });
-            }
-        }
-        if (typeof newVideo.publicationDate === 'string') {
-            if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(newVideo.publicationDate)) {
-                errorsArray.push({ message: 'error', field: 'publicationDate' });
-            }
-        }
-        else {
-            errorsArray.push({ message: 'error', field: 'publicationDate' });
-        }
-        if (errorsArray.length > 0) {
-            let eList = { errorsMessages: errorsArray };
-            res.status(requestTypes_1.default.BAD_REQUEST_400).send(eList);
-        }
-        else {
-            constVideos_1.videos[index] = newVideo;
-            res.sendStatus(requestTypes_1.default.NO_CONTENT_204);
-        }
-    }
-    else {
-        res.sendStatus(requestTypes_1.default.NOT_FOUND_404);
-    }
-});
+//app.use('/videos', videoRouter)
+app.use('/testing', testing_router_1.testRouter);
+app.use('/blogs', blogs_router_1.blogRouter);
+app.use('/posts', posts_router_1.postRouter);
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

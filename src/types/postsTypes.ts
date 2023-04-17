@@ -1,5 +1,3 @@
-import { type } from "os"
-
 export type postsType = {
     'id': string
     'title': string

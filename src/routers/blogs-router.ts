@@ -57,7 +57,7 @@ blogDescriptionVal,
 blogWebsiteUrlVal,
 inputValidationMidldewareErrors,
 (req: Request, res: Response) => {
-    const id = req.body.id
+    const id = req.params.id
     const name = req.body.name
     const description = req.body.description
     const website = req.body.websiteUrl

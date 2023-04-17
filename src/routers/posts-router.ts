@@ -33,7 +33,7 @@ inputValidationMidldewareErrors,
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return
     } 
-    res.status(HTTP_STATUSES.OK_200).send(foundPost)
+    res.status(HTTP_STATUSES.NO_CONTENT_204).send(foundPost)
 })  
 
 postRouter.post('/', 
