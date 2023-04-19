@@ -7,22 +7,22 @@ import { userRepository } from "../repositories/user-repositories"
 export const postTitleVal = body('title')
     .trim().isString().withMessage('Title be a string')
     .bail()
-    .isLength({max: 30}).withMessage('Title no more than 30')
+    .isLength({min: 1, max: 30}).withMessage('Title no more than 30')
 
 export const postShortDescriptionVal = body('shortDescription')
     .trim().isString().withMessage('ShortDescription be a string')
     .bail()
-    .isLength({max: 100}).withMessage('ShortDescription no more than 100')
+    .isLength({min: 1, max: 100}).withMessage('ShortDescription no more than 100')
 
 export const postContentVal = body('content')
     .trim().isString().withMessage('Content be a string')
     .bail()
-    .isLength({max: 1000}).withMessage('Content no more than 1000')
+    .isLength({min: 1, max: 1000}).withMessage('Content no more than 1000')
 
 export const postBlogIdVal = body('blogId')
     .trim().isString().withMessage('BlogId be a string')
     .bail()
-    .isLength({max: 100}).withMessage('BlogId no more than 500')
+    .isLength({min: 1, max: 100}).withMessage('BlogId no more than 500')
     .bail()
     .custom(value => {
         if(!blogRepository.findBlog(value)) {
