@@ -14,7 +14,7 @@ exports.postRepository = {
     createPost(title, shortdescription, content, blogId) {
         const postId = blogs_repositories_1.blogRepository.findBlog(blogId);
         const newPost = {
-            id: (exports.posts.length + 1).toString(),
+            id: new Date().toString(),
             title: title,
             shortdescription: shortdescription,
             content: content,

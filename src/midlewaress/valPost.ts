@@ -20,13 +20,8 @@ export const postContentVal = body('content')
     .isLength({min: 1, max: 1000}).withMessage('Content no more than 1000')
 
 export const postBlogIdVal = body('blogId')
+    .exists().withMessage('BlogId be a exist')
+    .bail()
     .trim().isString().withMessage('BlogId be a string')
-    .bail()
-    .isLength({min: 1, max: 100}).withMessage('BlogId no more than 500')
-    .bail()
-    .custom(value => {
-        if(!blogRepository.findBlog(value)) {
-            throw new Error('Blog is not found')
-        }
-        return true
-    })
+export const postBlogName = body('blogName')  
+    .trim().optional().isString()      

@@ -8,6 +8,7 @@ import { postShortDescriptionVal } from "../midlewaress/valPost";
 import { postContentVal } from "../midlewaress/valPost";
 import { postBlogIdVal } from "../midlewaress/valPost";
 import { inputValidationMidldewareErrors } from "../midlewaress/valMiddlewire";
+import { postBlogName } from "../midlewaress/valPost";
 export const postRouter = Router({})
 
 postRouter.get('/', (req: Request, res: Response) => {
@@ -42,6 +43,7 @@ postTitleVal,
 postShortDescriptionVal,
 postContentVal,
 postBlogIdVal,
+postBlogName,
 inputValidationMidldewareErrors,
 (req: Request, res: Response) => {
     const title = req.body.title
@@ -58,6 +60,7 @@ postTitleVal,
 postShortDescriptionVal,
 postContentVal,
 postBlogIdVal,
+postBlogName,
 inputValidationMidldewareErrors,
 (req: Request, res: Response) => {
     const id = req.params.id
