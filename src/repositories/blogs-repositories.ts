@@ -3,6 +3,7 @@ import { blogsType } from "../types/blogsTypes"
 
 
 export let blogs: allBlogsType = []
+
 export const blogRepository = {
     
     findBlogs(): allBlogsType {
