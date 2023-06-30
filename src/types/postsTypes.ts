@@ -1,7 +1,7 @@
 export type postsType = {
     'id': string
     'title': string
-    'shortdescription': string 
+    'shortDescription': string 
     'content': string
     'blogId': string 
     'blogName': string

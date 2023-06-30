@@ -45,10 +45,10 @@ postBlogIdVal,
 inputValidationMidldewareErrors,
 (req: Request, res: Response) => {
     const title = req.body.title
-    const shortdescription = req.body.shortdescription
+    const shortDescription = req.body.shortDescription
     const content = req.body.content
     const blogId = req.body.blogId
-    const newPostCreate = postRepository.createPost(title, shortdescription, content, blogId)
+    const newPostCreate = postRepository.createPost(title, shortDescription, content, blogId)
         res.status(HTTP_STATUSES.CREATED_201).send(newPostCreate)
 })  
 

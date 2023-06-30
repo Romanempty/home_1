@@ -14,12 +14,12 @@ export const postRepository = {
         return post
     },
 
-    createPost(title: string, shortdescription: string, content: string, blogId: string) {
+    createPost(title: string, shortDescription: string, content: string, blogId: string) {
         const postId = blogRepository.findBlog(blogId)
         const newPost: postsType = {
             id: (posts.length + 1).toString(),
             title: title,
-            shortdescription: shortdescription,
+            shortDescription: shortDescription,
             content: content,
             blogId:postId!.id,
             blogName:postId!.name
@@ -28,11 +28,11 @@ export const postRepository = {
         return newPost
     },
 
-    updatePost(id: string, title: string, shortdescription: string, content: string, blogId: string) {
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         let foundPostById = posts.find(p => p.id === id)
         if(foundPostById) {
             foundPostById.title = title
-            foundPostById.shortdescription = shortdescription
+            foundPostById.shortDescription = shortDescription
             foundPostById.content = content
             foundPostById.blogId = blogId
             return true
