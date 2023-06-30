@@ -62,10 +62,10 @@ inputValidationMidldewareErrors,
 (req: Request, res: Response) => {
     const id = req.params.id
     const title = req.body.title
-    const shortdescription = req.body.shortdescription
+    const shortDescription = req.body.shortDescription
     const content = req.body.content
     const blogId = req.body.blogId
-    const postUpdate = postRepository.updatePost(id, title, shortdescription, content, blogId)
+    const postUpdate = postRepository.updatePost(id, title, shortDescription, content, blogId)
         if(!postUpdate) {
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
