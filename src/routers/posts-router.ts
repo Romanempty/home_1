@@ -8,6 +8,7 @@ import { postShortDescriptionVal } from "../midlewaress/valPost";
 import { postContentVal } from "../midlewaress/valPost";
 import { postBlogIdVal } from "../midlewaress/valPost";
 import { inputValidationMidldewareErrors } from "../midlewaress/valMiddlewire";
+
 export const postRouter = Router({})
 
 postRouter.get('/', (req: Request, res: Response) => {
