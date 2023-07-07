@@ -64,7 +64,7 @@ export const blogRepositoryDb = {
     const result = await  blogsCollection.updateOne({_id: _id}, {
         $set: {
             name :data.name,
-            description : data.description,
+            description : data.description, 
             websiteUrl : data.websiteUrl
         }
     })
