@@ -21,8 +21,10 @@ export const postContentVal = body('content')
     .isLength({min: 1, max: 1000}).withMessage('Content no more than 1000')
 
 export const postBlogIdVal = body('blogId')
-    .custom(value => {
-        if(!blogRepositoryDb.findBlog(value)) {
+    .custom( async (value) => {
+const foundBlog = await blogRepositoryDb.findBlog(value)
+console.log('middleware: ', foundBlog)
+        if(!foundBlog) {
             throw new Error('Blog is not found')
         }
         return true

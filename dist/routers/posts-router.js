@@ -37,19 +37,19 @@ exports.postRouter.delete('/:id', valMiddlewire_1.authorizationVal, valMiddlewir
 });
 exports.postRouter.post('/', valMiddlewire_1.authorizationVal, valPost_1.postTitleVal, valPost_2.postShortDescriptionVal, valPost_3.postContentVal, valPost_4.postBlogIdVal, valMiddlewire_2.inputValidationMidldewareErrors, (req, res) => {
     const title = req.body.title;
-    const shortdescription = req.body.shortdescription;
+    const shortDescription = req.body.shortDescription;
     const content = req.body.content;
     const blogId = req.body.blogId;
-    const newPostCreate = posts_repositories_2.postRepository.createPost(title, shortdescription, content, blogId);
+    const newPostCreate = posts_repositories_2.postRepository.createPost(title, shortDescription, content, blogId);
     res.status(statusViews_1.default.CREATED_201).send(newPostCreate);
 });
 exports.postRouter.put('/:id', valMiddlewire_1.authorizationVal, valPost_1.postTitleVal, valPost_2.postShortDescriptionVal, valPost_3.postContentVal, valPost_4.postBlogIdVal, valMiddlewire_2.inputValidationMidldewareErrors, (req, res) => {
     const id = req.params.id;
     const title = req.body.title;
-    const shortdescription = req.body.shortdescription;
+    const shortDescription = req.body.shortDescription;
     const content = req.body.content;
     const blogId = req.body.blogId;
-    const postUpdate = posts_repositories_2.postRepository.updatePost(id, title, shortdescription, content, blogId);
+    const postUpdate = posts_repositories_2.postRepository.updatePost(id, title, shortDescription, content, blogId);
     if (!postUpdate) {
         return res.sendStatus(statusViews_1.default.NOT_FOUND_404);
     }

@@ -11,12 +11,12 @@ exports.postRepository = {
         let post = exports.posts.find(p => p.id === id);
         return post;
     },
-    createPost(title, shortdescription, content, blogId) {
+    createPost(title, shortDescription, content, blogId) {
         const postId = blogs_repositories_1.blogRepository.findBlog(blogId);
         const newPost = {
             id: (exports.posts.length + 1).toString(),
             title: title,
-            shortdescription: shortdescription,
+            shortDescription: shortDescription,
             content: content,
             blogId: postId.id,
             blogName: postId.name
@@ -24,11 +24,11 @@ exports.postRepository = {
         exports.posts.push(newPost);
         return newPost;
     },
-    updatePost(id, title, shortdescription, content, blogId) {
+    updatePost(id, title, shortDescription, content, blogId) {
         let foundPostById = exports.posts.find(p => p.id === id);
         if (foundPostById) {
             foundPostById.title = title;
-            foundPostById.shortdescription = shortdescription;
+            foundPostById.shortDescription = shortDescription;
             foundPostById.content = content;
             foundPostById.blogId = blogId;
             return true;

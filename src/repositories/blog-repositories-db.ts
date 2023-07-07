@@ -3,6 +3,7 @@ import { blogsTypeDbType } from "../types/blogsTypes"
 import { blogsCollection } from "./db"
 import { blogsTypeDb } from "../types/blogsTypes"
 import { upBlogeDb } from "../types/blogsTypes"
+import { log } from "console"
 
 export const blogRepositoryDb = {
     
@@ -22,9 +23,11 @@ export const blogRepositoryDb = {
         if (!ObjectId.isValid(id)) {
         return null
     }
+
+    console.log('id: ', id)
     const _id = new ObjectId(id)
     const foundedBlog: blogsTypeDbType | null = await blogsCollection.findOne({_id: _id})
-
+   console.log('foundBlog: ',foundedBlog )
     if (!foundedBlog) {
         return null
     }
