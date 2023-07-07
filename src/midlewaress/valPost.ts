@@ -3,6 +3,7 @@ import {validationResult, ValidationError, body, header } from "express-validato
 import HTTP_STATUSES from "../views/statusViews"
 import { blogRepository } from "../repositories/blogs-repositories"
 import { userRepository } from "../repositories/user-repositories"
+import { blogRepositoryDb } from "../repositories/blog-repositories-db"
 
 export const postTitleVal = body('title')
     .trim().isString().withMessage('Title be a string')
@@ -21,7 +22,7 @@ export const postContentVal = body('content')
 
 export const postBlogIdVal = body('blogId')
     .custom(value => {
-        if(!blogRepository.findBlog(value)) {
+        if(!blogRepositoryDb.findBlog(value)) {
             throw new Error('Blog is not found')
         }
         return true
