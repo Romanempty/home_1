@@ -32,8 +32,8 @@ export type postsTypeDbType = {
 
 
 export type inputPostModel = {
-    title: string,
-    shortDescription:string, 
-    content: string, 
+    title: string
+    shortDescription:string 
+    content: string 
     blogId: string
 }

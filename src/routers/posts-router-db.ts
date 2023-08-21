@@ -1,6 +1,5 @@
 import {Request, Response, Router } from "express";
 import HTTP_STATUSES from "../views/statusViews";
-import { posts } from "../repositories/posts-repositories";
 import { postRepositoryDb } from "../repositories/post-repositories-db";
 import { authorizationVal } from "../midlewaress/valMiddlewire";
 import { postTitleVal } from "../midlewaress/valPost";
@@ -16,7 +15,7 @@ export const postRouterDb = Router({})
 
 postRouterDb.get('/', async (req: Request, res: Response) => {
     const allPosts: postsTypeDb[] = await postRepositoryDb.findPosts()
-    res.status(HTTP_STATUSES.OK_200).send(posts)
+    res.status(HTTP_STATUSES.OK_200).send(allPosts)
 })
 
 postRouterDb.get('/:id', async (req: RequestWithParams<idParams>, res: Response<postsTypeDb>) => {

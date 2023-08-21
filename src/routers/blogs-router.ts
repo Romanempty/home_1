@@ -1,22 +1,28 @@
 import { Request, Response, Router } from "express";
 import HTTP_STATUSES from "../views/statusViews";
-import { blogs } from "../repositories/blogs-repositories";
-import { blogRepository } from "../repositories/blogs-repositories";
+import { blogRepositoryDb } from "../repositories/blog-repositories-db";
 import { authorizationVal } from "../midlewaress/valMiddlewire";
 import { inputValidationMidldewareErrors } from "../midlewaress/valMiddlewire";
 import { blogNameVal } from "../midlewaress/valBlog";
 import { blogDescriptionVal } from "../midlewaress/valBlog";
 import { blogWebsiteUrlVal } from "../midlewaress/valBlog";
+import { blogsTypeDb, upBlogeDb } from "../types/blogsTypes";
+import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody } from "../views/requestViewss";
+import { idParams } from "../views/requestViewss";
+import { ObjectId } from "mongodb";
+import { blogService } from "../domain/blog-service";
+import { queryRepositoryBlogs } from "../domain/query-repository-blogs";
 
-export const blogRouter = Router({})
 
-blogRouter.get('/', (req: Request, res: Response) => {
-    const allBlogs = blogRepository.findBlogs()
+export const blogRouterDb = Router({})
+
+blogRouterDb.get('/', async (req: Request, res: Response) => {
+    const blogs = await queryRepositoryBlogs.findBlogs(req.params.pageSize, req.params.pageNamber, req.params.sortDirection)
     res.status(HTTP_STATUSES.OK_200).send(blogs)
 })
 
-blogRouter.get('/:id', (req: Request, res: Response) => {
-    let foundBlog = blogRepository.findBlog(req.params.id)
+blogRouterDb.get('/:id', async (req: Request, res: Response) => {
+    const foundBlog = await blogService.findBlog(req.params.id)
     if (!foundBlog) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return
@@ -24,47 +30,81 @@ blogRouter.get('/:id', (req: Request, res: Response) => {
     res.status(HTTP_STATUSES.OK_200).send(foundBlog)
 })
 
-blogRouter.delete('/:id', 
+blogRouterDb.get('/:id/posts', async (req: Request, res: Response) => {
+    const blogFindForPost = await blogRepositoryDb.findBlog(req.params.id)
+    if (blogFindForPost){
+        res.status(HTTP_STATUSES.NOT_FOUND_404).send(blogFindForPost)
+        return
+    }
+
+    const blogFindPost = await queryRepositoryBlogs.findPostBlog(req.query.pageNamber + "" || "1", req.query.pageSize + "" || "10", 
+        req.query.sortDirection + "" || "desc", req.query.sortBy + "" || "createdAt")
+
+        if (blogFindPost) {
+            res.status(HTTP_STATUSES.OK_200).send(blogFindPost)
+            return
+        }
+})
+
+blogRouterDb.delete('/:id', 
 authorizationVal,
+blogNameVal,
+blogDescriptionVal,
+blogWebsiteUrlVal,
 inputValidationMidldewareErrors,
-(req: Request, res: Response) => {
-    let foundBlog = blogRepository.deleteBlog(req.params.id)
-    if (!foundBlog) {
+async (req: Request, res: Response) => {
+    const deletedBlog = await blogService.findBlog(req.params.id)
+    if(!deletedBlog) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return
     } 
-    res.status(HTTP_STATUSES.NO_CONTENT_204).send(foundBlog)
+    const blogDelete = await blogService.deleteBlogId(req.params.id)
+    res.sendStatus(HTTP_STATUSES.CREATED_201)
 })  
 
-blogRouter.post('/', 
+blogRouterDb.post('/', 
 authorizationVal,
 blogNameVal,
 blogDescriptionVal,
 blogWebsiteUrlVal,
 inputValidationMidldewareErrors,
-(req: Request, res: Response) => {
-    const name = req.body.name
-    const description = req.body.description
-    const websiteUrl = req.body.websiteUrl
-    const newBlogCreate = blogRepository.createBlog(name, description, websiteUrl)
-        res.status(HTTP_STATUSES.CREATED_201).send(newBlogCreate)
+async (req: Request, res: Response) => {
+const newBlog = await blogService.createBlog(req.body.name, req.body.description, req.body.websiteUrl) 
+        res.status(HTTP_STATUSES.CREATED_201).send(newBlog)
 })  
 
-blogRouter.put('/:id', 
+blogRouterDb.post('/:id/posts', 
 authorizationVal,
 blogNameVal,
 blogDescriptionVal,
 blogWebsiteUrlVal,
 inputValidationMidldewareErrors,
-(req: Request, res: Response) => {
-    const id = req.params.id
-    const name = req.body.name
-    const description = req.body.description
-    const website = req.body.websiteUrl
-    const blogUpdate = blogRepository.updateBlog(id, name, description, website)
+async (req: Request, res: Response) => {
+    const blogFindPost = await blogRepositoryDb.findBlog(req.params.id)
+    if (blogFindPost){
+        res.status(HTTP_STATUSES.NOT_FOUND_404).send(blogFindPost)
+        return
+    }
+
+const newPostBlogId = await queryRepositoryBlogs.createPostBlog(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
+    if(newPostBlogId) {
+        res.status(HTTP_STATUSES.CREATED_201).send(newPostBlogId)
+        return
+    }        
+})  
+
+blogRouterDb.put('/:id', 
+authorizationVal,
+blogNameVal,
+blogDescriptionVal,
+blogWebsiteUrlVal,
+inputValidationMidldewareErrors,
+async (req: Request, res: Response) => {
+    const blogUpdate = await blogService.findBlog(req.params.id)
         if(blogUpdate) {
             return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)            
         } else {
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-        }    
+        }
+    const blogUp = await blogService.updateBlog(req.params.id, req.body.name, req.body.description, req.body.websiteUrl)    
 }) 

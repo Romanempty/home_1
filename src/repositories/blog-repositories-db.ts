@@ -1,9 +1,11 @@
-import { ObjectId } from "mongodb"
+import { ObjectId, WithId } from "mongodb"
 import { blogsTypeDbType } from "../types/blogsTypes"
 import { blogsCollection } from "./db"
 import { blogsTypeDb } from "../types/blogsTypes"
 import { upBlogeDb } from "../types/blogsTypes"
 import { log } from "console"
+import { blogsType } from "../types/blogsTypes"
+
 
 export const blogRepositoryDb = {
     
@@ -20,55 +22,43 @@ export const blogRepositoryDb = {
     },
 
     async findBlog(id: string): Promise<blogsTypeDb | null> {
-        if (!ObjectId.isValid(id)) {
-        return null
-    }
-
-    console.log('id: ', id)
-    const _id = new ObjectId(id)
-    const foundedBlog: blogsTypeDbType | null = await blogsCollection.findOne({_id: _id})
-   console.log('foundBlog: ',foundedBlog )
-    if (!foundedBlog) {
-        return null
-    }
+        const blogId = await blogsCollection.findOne({_id: new ObjectId(id)})
+        if (blogId) {
     return {
-        id: foundedBlog._id.toString(),
-        name: foundedBlog.name,
-        description: foundedBlog.description, 
-        websiteUrl: foundedBlog.websiteUrl,
-        createdAt: foundedBlog.createdAt,
-        isMembership: foundedBlog.isMembership  
+        id: blogId._id.toString(),
+        name: blogId.name,
+        description: blogId.description, 
+        websiteUrl: blogId.websiteUrl,
+        createdAt: blogId.createdAt,
+        isMembership: blogId.isMembership  
+        }
+    } else {
+        return null
     }
+    
 },
 
-    async createBlog(data:upBlogeDb): Promise<blogsTypeDb> {
-        const newBlogDb: blogsTypeDbType = {
-            _id: new ObjectId(),
-            ...data,
-            createdAt: new Date().toISOString(),
-            isMembership: false
-        }
-        await blogsCollection.insertOne(newBlogDb)
+    async createBlog(createBlog: WithId<blogsType>): Promise<blogsTypeDb> {
+        const result = await blogsCollection.insertOne(createBlog)
         return {
-            id: newBlogDb._id.toString(),
-            name: newBlogDb.name,
-            description : newBlogDb.description,
-            websiteUrl: newBlogDb.websiteUrl,   
-            createdAt: newBlogDb.createdAt,
-            isMembership: newBlogDb.isMembership
+            id: createBlog._id.toString(),
+            name: createBlog.name,
+            description : createBlog.description,
+            websiteUrl: createBlog.websiteUrl,   
+            createdAt: createBlog.createdAt,
+            isMembership: createBlog.isMembership
         }
     },
 
-    async updateBlog(id:string, data:upBlogeDb): Promise<boolean> {
+    async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
     if (!ObjectId.isValid(id)) {
     return false
     }
-    const _id = new ObjectId(id)
-    const result = await  blogsCollection.updateOne({_id: _id}, {
+    const result = await  blogsCollection.updateOne({_id: new ObjectId(id)}, {
         $set: {
-            name :data.name,
-            description : data.description, 
-            websiteUrl : data.websiteUrl
+            name: name,
+            description : description, 
+            websiteUrl : websiteUrl
         }
     })
     return result.matchedCount === 1      

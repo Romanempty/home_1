@@ -3,20 +3,40 @@ import { inputPostModel, postsTypeDb } from "../types/postsTypes"
 import { postsTypeDbType } from "../types/postsTypes"
 import { blogsCollection, postsCollection } from "./db"
 import { ObjectId } from "mongodb"
+import { PageType } from "../types/blogsTypes"
+
+function skipp(pageNamber: string, pageSize: string): number {
+    return (+pageNamber - 1) * (+pageSize)
+}
 
 export const postRepositoryDb = {
 
-    async findPosts(): Promise<postsTypeDb[]> {
-        const postsDb = await postsCollection.find({}).toArray()
-        return postsDb.map((post: postsTypeDbType) => ({
-            id: post._id.toString(),
-            title: post.title,
-            shortDescription: post.shortDescription, 
-            content: post.content,
-            blogId: post.blogId, 
-            blogName: post.blogName,
-            createdAt: post.createdAt
+    async findPosts(pageNamber: string, pageSize: string, sortDirection: string, sortBy: string): Promise<PageType<postsTypeDb>> {
+        const result = await postsCollection.find({})
+        .sort({[sortBy]: sortDirection === "desc" ? 1: -1})
+        .skip(skipp(pageNamber, pageSize))
+        .limit(+pageSize)
+        .toArray()
+
+        const itemPost: postsTypeDb[] = result.map(el => ({
+            id: el._id.toString(),
+            title: el.title,
+            shortDescription: el.shortDescription, 
+            content: el.content,
+            blogId: el.blogId, 
+            blogName: el.blogName,
+            createdAt: el.createdAt
         }))
+
+        const pageCount = Math.ceil((+itemPost.length) / (+pageSize))
+        const response: PageType<postsTypeDb> = {
+            pageCount: pageCount,
+            page: +pageNamber,
+            pageSize: +pageSize,
+            totalCount: itemPost.length,
+            items: itemPost
+        }
+        return response
     },
 
     async findPost(id: string): Promise<postsTypeDb | null> {

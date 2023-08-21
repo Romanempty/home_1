@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import {validationResult, ValidationError, body, header } from "express-validator"
 import HTTP_STATUSES from "../views/statusViews"
-import { blogRepository } from "../repositories/blogs-repositories"
 import { userRepository } from "../repositories/user-repositories"
 import { blogRepositoryDb } from "../repositories/blog-repositories-db"
 
