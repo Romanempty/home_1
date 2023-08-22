@@ -32,7 +32,7 @@ blogRouterDb.get('/:id', async (req: Request, res: Response) => {
 
 blogRouterDb.get('/:id/posts', async (req: Request, res: Response) => {
     const blogFindForPost = await blogRepositoryDb.findBlog(req.params.id)
-    if (blogFindForPost){
+    if (!blogFindForPost){
         res.status(HTTP_STATUSES.NOT_FOUND_404).send(blogFindForPost)
         return
     }
@@ -81,11 +81,10 @@ blogWebsiteUrlVal,
 inputValidationMidldewareErrors,
 async (req: Request, res: Response) => {
     const blogFindPost = await blogRepositoryDb.findBlog(req.params.id)
-    if (blogFindPost){
+    if (!blogFindPost){
         res.status(HTTP_STATUSES.NOT_FOUND_404).send(blogFindPost)
         return
     }
-
 const newPostBlogId = await queryRepositoryBlogs.createPostBlog(req.body.title, req.body.shortDescription, req.body.content, req.params.id)
     if(newPostBlogId) {
         res.status(HTTP_STATUSES.CREATED_201).send(newPostBlogId)
