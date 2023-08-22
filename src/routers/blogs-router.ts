@@ -13,6 +13,10 @@ import { ObjectId } from "mongodb";
 import { blogService } from "../domain/blog-service";
 import { queryRepositoryBlogs } from "../domain/query-repository-blogs";
 import { postBlogIdVal } from "../midlewaress/valPost";
+import { postTitleVal } from "../midlewaress/valPost";
+import { postShortDescriptionVal } from "../midlewaress/valPost";
+import { postContentVal } from "../midlewaress/valPost";
+
 
 export const blogRouterDb = Router({})
 
@@ -76,6 +80,9 @@ const newBlog = await blogService.createBlog(req.body.name, req.body.description
 blogRouterDb.post('/:id/posts', 
 authorizationVal,
 postBlogIdVal,
+postTitleVal,
+postShortDescriptionVal,
+postContentVal,
 blogNameVal,
 blogDescriptionVal,
 blogWebsiteUrlVal,
