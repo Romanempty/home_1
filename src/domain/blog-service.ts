@@ -1,14 +1,10 @@
 import { ObjectId } from "mongodb"
 import { blogRepositoryDb } from "../repositories/blog-repositories-db"
-import { blogsTypeDbType, upBlogeDb } from "../types/blogsTypes"
-import { blogsTypeDb } from "../types/blogsTypes"
-import { blogsCollection } from "../repositories/db"
-import { queryRepositoryBlogs } from "./query-repository-blogs"
-
+import { blogsViewModel } from "../types/blogsTypes"
 
 export const blogService = {
     
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<blogsTypeDb> {
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<object> {
         const createBlog = {
             _id: new ObjectId(),
             name:name,
@@ -17,23 +13,18 @@ export const blogService = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        return await blogRepositoryDb.createBlog(createBlog)
+        return  blogRepositoryDb.createBlog(createBlog)
     },
-
-    async findBlog(id: string): Promise<blogsTypeDb | null> {
-        return await blogRepositoryDb.findBlog(id)
-    },
-
 
     async updateBlog(id: string, name: string, description: string, websiteUrl: string) : Promise<boolean> {
-        return await blogRepositoryDb.updateBlog(id, name, description, websiteUrl)
+        return  blogRepositoryDb.updateBlog(id, name, description, websiteUrl)
     },
 
-    async deleteBlogId(id: string): Promise<boolean | null> {
-        return await blogRepositoryDb.deleteBlog(id)
+    async deleteBlogId(id: string): Promise<boolean> {
+        return  blogRepositoryDb.deleteBlog(id)
     },
-
-    async deleteBlogs(): Promise<boolean> {
-        return await blogRepositoryDb.deleteBlogs()
+    
+    async deleteBlogs(): Promise<void> {
+        return blogRepositoryDb.deleteBlogs()
     }
 }

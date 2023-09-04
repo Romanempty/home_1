@@ -3,6 +3,7 @@ import {validationResult, ValidationError, body, header } from "express-validato
 import HTTP_STATUSES from "../views/statusViews"
 import { userRepository } from "../repositories/user-repositories"
 import { blogRepositoryDb } from "../repositories/blog-repositories-db"
+import { queryRepositoryBlogs } from "../domain/query-repository-blogs"
 
 export const postTitleVal = body('title')
     .trim().isString().withMessage('Title be a string')
@@ -21,7 +22,7 @@ export const postContentVal = body('content')
 
 export const postBlogIdVal = body('blogId')
     .custom( async (value) => {
-const foundBlog = await blogRepositoryDb.findBlog(value)
+const foundBlog = await queryRepositoryBlogs.findBlogById(value)
 console.log('middleware: ', foundBlog)
         if(!foundBlog) {
             throw new Error('Blog is not found')

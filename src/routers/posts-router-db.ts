@@ -7,19 +7,28 @@ import { postShortDescriptionVal } from "../midlewaress/valPost";
 import { postContentVal } from "../midlewaress/valPost";
 import { postBlogIdVal } from "../midlewaress/valPost";
 import { inputValidationMidldewareErrors } from "../midlewaress/valMiddlewire";
-import { inputPostModel, postsTypeDb } from "../types/postsTypes";
-import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, idParams } from "../views/requestViewss";
+import { PostType, inputPostModel, postViewModel } from "../types/postsTypes";
+import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithParamsAnqQuery, idParams } from "../views/requestViewss";
 import { param } from "express-validator";
+import { postQueryRepository } from "../domain/query-repository-post";
+import { postsService } from "../domain/post-service";
+import { ObjectId } from "mongodb";
+import { RequestWithQuery } from "../views/requestViewss";
+
 
 export const postRouterDb = Router({})
 
-postRouterDb.get('/', async (req: Request, res: Response) => {
-    const allPosts: postsTypeDb[] = await postRepositoryDb.findPosts()
-    res.status(HTTP_STATUSES.OK_200).send(allPosts)
+postRouterDb.get('/', async (req: RequestWithQuery<{sortBy: string, sortDirection: 'asc' | 'desc', pageNamber: number, pageSize: number}>, res: Response) => {
+    const sortBy = req.query.sortBy || 'createdAt'
+    const sortDirection = req.query.sortDirection || 'desc'
+    const pageNamber = req.query.pageNamber || 1
+    const pageSize = req.query.pageSize || 10
+    const allPosts: PostType = await postQueryRepository.findPosts(sortBy, sortDirection, pageNamber, pageSize)
+    return res.status(HTTP_STATUSES.OK_200).send(allPosts)
 })
 
-postRouterDb.get('/:id', async (req: RequestWithParams<idParams>, res: Response<postsTypeDb>) => {
-    const foundPost = await postRepositoryDb.findPost(req.params.id)
+postRouterDb.get('/:id', postBlogIdVal, async (req: RequestWithParams<{id: string}>, res: Response) => {
+    const foundPost: postViewModel | null = await postQueryRepository.findPostID(req.params.id)
     if (!foundPost) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return
@@ -30,8 +39,8 @@ postRouterDb.get('/:id', async (req: RequestWithParams<idParams>, res: Response<
 postRouterDb.delete('/:id', 
 authorizationVal,
 inputValidationMidldewareErrors,
-async (req: RequestWithParams<idParams>, res: Response) => {
-    let deletePost = await postRepositoryDb.deletePost(req.params.id)
+async (req: RequestWithParams<{id: string}>, res: Response) => {
+    const deletePost = await postsService.deletePostId(req.params.id)
     if (!deletePost) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     return
@@ -46,9 +55,10 @@ postShortDescriptionVal,
 postContentVal,
 postBlogIdVal,
 inputValidationMidldewareErrors,
-async (req: RequestWithBody<inputPostModel>, res: Response<postsTypeDb>) => {
-const newPostCreate = await postRepositoryDb.createPost(req.body)
-        res.status(HTTP_STATUSES.CREATED_201).send(newPostCreate)
+async (req: RequestWithBody<{ title: string, shortDescription:string, content: string, blogId: string }>, res: Response) => {
+const newPostCreate = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+const createPost: postViewModel | null = await postQueryRepository.findPostID(newPostCreate.toString())
+    return res.status(HTTP_STATUSES.CREATED_201).send(createPost)
 })  
 
 postRouterDb.put('/:id', 
@@ -58,8 +68,8 @@ postShortDescriptionVal,
 postContentVal,
 postBlogIdVal,
 inputValidationMidldewareErrors,
-async (req: RequestWithParamsAndBody<idParams, inputPostModel>, res: Response<postsTypeDb>) => {
-    const postUpdate = await postRepositoryDb.updatePost(req.params.id, req.body)
+async (req: RequestWithParamsAndBody<{id: string}, {title: string, shortDescription:string, content: string, blogId: string}>, res: Response) => {
+    const postUpdate: boolean = await postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if(!postUpdate) {
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
