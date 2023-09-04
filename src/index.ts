@@ -1,7 +1,5 @@
 import express, {Request, Response} from 'express'
 import  bodyParser from 'body-parser'
-import { videoRouter } from './routers/videos-router'
-import { testRouter } from './routers/testing-router'
 import { blogRouterDb } from './routers/blogs-router'
 import { postRouterDb } from './routers/posts-router-db'
 import { runDb } from './repositories/db'
