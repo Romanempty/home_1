@@ -3,30 +3,29 @@ import {validationResult, ValidationError, body } from "express-validator"
 import HTTP_STATUSES from "../views/statusViews"
 import { userRepository } from "../repositories/user-repositories"
 
-export const authorizationVal = (req: Request, res: Response, next: NextFunction) => {
-    const authorization = req.headers.authorization
-    if (!authorization) {
-        return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
-    }
-    const [method, encoded] = authorization.split(' ')
-    const decoded = Buffer.from(encoded, 'base64').toString('ascii')
-
-    const [username, password]: Array<string> = decoded.split(':')
-    if (method !== 'Basic' || username !== 'admin' || password !== 'qwerty') {
-        return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
+export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction ) => {
+    //decode to base64
+    const auth = btoa("admin:qwerty");
+    if(req.headers.authorization===`Basic ` + auth){
+        next();
     } else {
-        next()
+        res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401);
     }
-}
+};
 
-export const inputValidationMidldewareErrors = (req:Request, res:Response, next: NextFunction) => {
-    const errorFormat = ({msg, param}: ValidationError) => {
-        return {message: msg, field: param}
+const ErrorFormatter = ({msg, path}: any) => {
+    return {
+        message: msg,
+        field: path
     }
-    const errors = validationResult(req).formatWith(errorFormat)
-    if(!errors.isEmpty()) {
-        res.status(HTTP_STATUSES.BAD_REQUEST_400).send({errorsMessages: errors.array()})
+};
+
+export const InputValidationMiddleware = (req: Request, res: Response, next: NextFunction) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errorsMessages = errors.array({ onlyFirstError: true }).map(error => ErrorFormatter(error))  
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errorsMessages });
     } else {
-        next()
+        next();
     }
 }

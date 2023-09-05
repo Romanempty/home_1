@@ -4,7 +4,7 @@ import { blogsViewModel } from "../types/blogsTypes"
 
 export const blogService = {
     
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<object> {
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<ObjectId> {
         const createBlog = {
             _id: new ObjectId(),
             name:name,

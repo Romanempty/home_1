@@ -5,24 +5,21 @@ import { queryRepositoryBlogs } from "../domain/query-repository-blogs"
 import { ObjectId } from "mongodb"
 import { blogRepositoryDb } from "../repositories/blog-repositories-db"
 import { blogModel } from "../types/blogsTypes"
-export const blogNameVal = body('name')
+import { InputValidationMiddleware } from "./valMiddlewire"
 
-    .trim().isString().withMessage('Name be a string')
-    .bail()
-    .isLength({min: 1, max: 15}).withMessage('Name no more than 15')
 
-export const blogDescriptionVal = body('description')
-    .trim().isString().withMessage('Description be a string')
-    .bail()
-    .isLength({min: 1, max: 500}).withMessage('Description no more than 500')
 
-export const blogWebsiteUrlVal = body('websiteUrl')
-    .trim().isString().withMessage('WebsiteUrl be a string')
-    .bail()
-    .isLength({min: 1, max: 100}).withMessage('WebsiteUrl no more than 500')
-    .bail()
-    .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
-    .withMessage('Not valid URL')
+const urlPattern ='^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$';
+
+export const BlogsValidationMiddleware = [
+    body("name").isString().trim().isLength({min:1, max: 15}).withMessage("Name should be less then 15 letters"),
+
+    body("description").isString().trim().isLength({min:1, max: 500}).withMessage("Description should be less then 500 letters"),
+    
+    body("websiteUrl").matches(urlPattern).isLength({min:1, max: 100}).withMessage("websiteUrl should be less then 500 letters"),
+
+    InputValidationMiddleware
+]
 
 export const blogIdValid = body('blogId')
 .custom( async (value) => {
@@ -37,3 +34,21 @@ console.log('middleware: ', foundBlog)
 export const isValidObjectId = (id: string): boolean => {
     return ObjectId.isValid(id)
 }
+
+export const BlogsValidationMiddlewareCreatePost = [
+
+    param("id").isString().trim().notEmpty().withMessage("blogId value is empty").custom(async blogId => {
+        const isValidBlogIdObject = isValidObjectId(blogId);
+        if(!isValidBlogIdObject){
+            throw new Error("Blog id is not valid");
+        }
+    }), 
+
+body("title").isString().trim().isLength({min: 1, max: 30}).withMessage("title is incorect or wrong format"),
+
+body("shortDescription").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription is incorect or wrong format"),
+
+body("content").isString().trim().isLength({min: 1, max: 1000}).withMessage("content is incorect or wrong format"),
+
+InputValidationMiddleware
+]

@@ -4,28 +4,29 @@ import HTTP_STATUSES from "../views/statusViews"
 import { userRepository } from "../repositories/user-repositories"
 import { blogRepositoryDb } from "../repositories/blog-repositories-db"
 import { queryRepositoryBlogs } from "../domain/query-repository-blogs"
+import { InputValidationMiddleware } from "./valMiddlewire"
+import { isValidObjectId } from "./valBlog"
 
-export const postTitleVal = body('title')
-    .trim().isString().withMessage('Title be a string')
-    .bail()
-    .isLength({min: 1, max: 30}).withMessage('Title no more than 30')
+export const PostsValidationMiddleware = [
 
-export const postShortDescriptionVal = body('shortDescription')
-    .trim().isString().withMessage('ShortDescription be a string')
-    .bail()
-    .isLength({min: 1, max: 100}).withMessage('ShortDescription no more than 100')
+    body("title").isString().trim().isLength({min: 1, max: 30}).withMessage("title is incorect or wrong format"),
 
-export const postContentVal = body('content')
-    .trim().isString().withMessage('Content be a string')
-    .bail()
-    .isLength({min: 1, max: 1000}).withMessage('Content no more than 1000')
+    body("shortDescription").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription is incorect or wrong format"),
 
-export const postBlogIdVal = body('blogId')
-    .custom( async (value) => {
-const foundBlog = await queryRepositoryBlogs.findBlogById(value)
-console.log('middleware: ', foundBlog)
-        if(!foundBlog) {
-            throw new Error('Blog is not found')
-        }
+    body("content").isString().trim().isLength({min: 1, max: 1000}).withMessage("content is incorect or wrong format"),
+
+    body("blogId").isString().trim().notEmpty().withMessage("blogId value is empty").custom(async blogId => {
+    const isValidBlogIdObject = isValidObjectId(blogId);
+    if(!isValidBlogIdObject){
+        throw new Error("Blog id is not valid");
+    }
+    const blog = await queryRepositoryBlogs.findBlogById(blogId);
+    if(!blog){
+        throw new Error("Blog is not found in DB")
+    } else {
         return true
-    })
+    }
+    }),
+
+    InputValidationMiddleware
+]
