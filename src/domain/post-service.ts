@@ -39,7 +39,7 @@ export const postsService = {
     },
 
     async deletePosts(): Promise<void> {
-        return await postRepositoryDb.deletePosts()
+        return await postRepositoryDb.deleteAllPosts()
     }
 
 }
