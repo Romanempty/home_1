@@ -4,7 +4,6 @@ import HTTP_STATUSES from "../views/statusViews"
 import { userRepository } from "../repositories/user-repositories"
 
 export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction ) => {
-    //decode to base64
     const auth = btoa("admin:qwerty");
     if(req.headers.authorization===`Basic ` + auth){
         next();
@@ -24,7 +23,7 @@ export const InputValidationMiddleware = (req: Request, res: Response, next: Nex
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const errorsMessages = errors.array({ onlyFirstError: true }).map(error => ErrorFormatter(error))  
-        res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errorsMessages });
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).send({ errorsMessages });
     } else {
         next();
     }
