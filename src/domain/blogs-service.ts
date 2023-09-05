@@ -26,6 +26,6 @@ export const blogsService = {
 
     async deleteAllBlogs(): Promise <void>{
         return blogsRepository.deleteAllBlogs();
-     }
+    }
 
 };

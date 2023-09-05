@@ -2,10 +2,10 @@ import { Response, Request, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { HTTP_STATUSES } from "../utils";
 
-const ErrorFormatter = ({msg, path}: any) => {
+const ErrorFormatter = ({msg, param}: any) => {
     return {
         message: msg,
-        field: path
+        field: param
     }
 };
 

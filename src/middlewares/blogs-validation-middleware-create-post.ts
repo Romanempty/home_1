@@ -11,11 +11,11 @@ export const BlogsValidationMiddlewareCreatePost = [
         }
     }), 
 
-   body("title").isString().trim().isLength({min: 1, max: 30}).withMessage("title is incorect or wrong format"),
+body("title").isString().trim().isLength({min: 1, max: 30}).withMessage("title is incorect or wrong format"),
 
-   body("shortDescription").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription is incorect or wrong format"),
+body("shortDescription").isString().trim().isLength({min: 1, max: 100}).withMessage("shortDescription is incorect or wrong format"),
 
-   body("content").isString().trim().isLength({min: 1, max: 1000}).withMessage("content is incorect or wrong format"),
+body("content").isString().trim().isLength({min: 1, max: 1000}).withMessage("content is incorect or wrong format"),
 
-   InputValidationMiddleware
+InputValidationMiddleware
 ]

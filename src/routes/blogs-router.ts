@@ -38,13 +38,13 @@ blogsRouter.get("/:id", async (req: RequestWithParams<{id: string}>, res: Respon
     };
     const foundBlog: BlogViewModel | null = await blogsQueryRepository.findBlogById(id);
     if(foundBlog){
-       return res.status(HTTP_STATUSES.OK_200).send(foundBlog);
+    return res.status(HTTP_STATUSES.OK_200).send(foundBlog);
     } else {
-       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
 });
 
- blogsRouter.get("/:id/posts", async (req: RequestWithParamsAnqQuery <{id: string}, { sortBy: string, sortDirection:'asc'|'desc', pageNumber: number, pageSize: number}>, res: Response) => {
+blogsRouter.get("/:id/posts", async (req: RequestWithParamsAnqQuery <{id: string}, { sortBy: string, sortDirection:'asc'|'desc', pageNumber: number, pageSize: number}>, res: Response) => {
     const id = req.params.id;
 
     const sortBy = req.query.sortBy || "createdAt";
@@ -120,9 +120,9 @@ async (req: RequestWithBodyAndParams<{id: string}, {name: string, description: s
     const blogIsUpdated: boolean = await blogsService.updateBlog(blogId, req.body.name, req.body.description, req.body.websiteUrl);//we don't need to return
 
     if(blogIsUpdated){
-       return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     } else {
-      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
 });
 
@@ -137,8 +137,8 @@ blogsRouter.delete("/:id", basicAuthMiddleware, async (req: RequestWithParams <{
 
     const isBlogDeleted: boolean = await blogsService.deleteBlog(blogId);
     if(isBlogDeleted){
-       return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }else{
-      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
 })
