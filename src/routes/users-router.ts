@@ -6,7 +6,7 @@ import { HTTP_STATUSES } from "../utils";
 import { authValidation } from "../middlewares/auth-middleware";
 import { userInputValidation } from "../middlewares/auth-middleware";
 import { UserViewPagimateModel } from "../models/users/userViewPaginateModel";
-import { UserInputModel } from "../models/users/userInputModel";
+import { userInputModel } from "../models/users/userViewModel";
 import { usersService } from "../domain/user-service";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { allowedNodeEnvironmentFlags } from "process";
@@ -37,7 +37,7 @@ userRouter.post('/',
 authMiddleware,
 userInputValidation,
 InputValidationMiddleware,
-async (req: RequestWithBody<UserInputModel>, res: Response) => {
+async (req: RequestWithBody<userInputModel>, res: Response) => {
     const newUser = await usersService.createUser(req.body.email, req.body.login, req.body.password)
     return res.status(HTTP_STATUSES.CREATED_201).send(newUser)
 })

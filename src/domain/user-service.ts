@@ -1,7 +1,5 @@
 import { UserViewModel } from "../models/users/userViewModel"
 import { usersRepository } from "../repositories/user-repository"
-import { userCreatedDbModel } from "../models/users/userDbModel"
-import { userDbModel } from "../models/users/userDbModel"
 import { ObjectId } from "mongodb"
 import { log } from "console"
 

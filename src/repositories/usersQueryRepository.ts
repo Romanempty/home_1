@@ -1,8 +1,6 @@
 import { client } from "../db/db";
-import { userCreatedDbModel, userCreatedModel, userDbModel } from "../models/users/userDbModel";
 import { findUserPaginateModel } from "../models/users/findUserPaginateModel";
 import { Filter, ObjectId } from "mongodb";
-import { userCreateModel } from "../models/users/userInputModel";
 import { UserViewPagimateModel } from "../models/users/userViewPaginateModel";
 import { query } from "express";
 import { UserViewModel } from "../models/users/userViewModel";

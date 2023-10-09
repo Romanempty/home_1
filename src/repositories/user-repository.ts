@@ -1,12 +1,8 @@
-import { userInputDbModel } from "../models/users/userInputDbModel"
 import { ObjectId } from "mongodb"
 import { usersCollection, usersQueryRepository } from "./usersQueryRepository"
 import { CreateResponseModel } from "../models/blogs/ResponseModel"
 import { client } from "../db/db"
 import { DeleteResponseModel } from "../models/blogs/ResponseModel"
-import { userCreatedDbModel } from "../models/users/userDbModel"
-import { userDbModel } from "../models/users/userDbModel"
-import { UserInputModel } from "../models/users/userInputModel"
 import { userDbViewModel } from "../models/users/userDbModel"
 
 
