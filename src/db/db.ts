@@ -17,8 +17,9 @@ export async function runDB(){
         //connect the client tot the server
         await client.connect();
         //establish and verify collection
-        await client.db('blogs').command({ ping: 1});
-        await client.db('posts').command({ ping: 1});
+        await client.db('blogs').command({ ping: 1})
+        await client.db('posts').command({ ping: 1})
+        await client.db('users').command({ ping: 1})
 
         console.log('Connected successfully to mongo server');
     } catch {

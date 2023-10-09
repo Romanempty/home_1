@@ -8,7 +8,7 @@ import { postsQueryRepository } from "./postsQueryRepository";
 
 const postsCollection = client.db().collection<PostDBModel>('posts');
 
-const formatPost = (postDB: PostDBModel ): PostViewModel =>{
+export const formatPost = (postDB: PostDBModel ): PostViewModel =>{
     const post = { 
         id: postDB._id.toString(), 
         title: postDB.title,
